@@ -1,4 +1,5 @@
 require 'Gosu'
+require_relative 'lib/tetrinominos' #calling the block class from the lib folder
 require_relative 'lib/grid' #calling the grid class from the lib folder
 
 class GameWindow < Gosu::Window
@@ -11,11 +12,13 @@ class GameWindow < Gosu::Window
     
   end
 
-  def draw
+  def draw()
     draw_background()
     grid = Grid.new()
     grid.print_grid
     grid.draw()
+    block = OBlock.new()
+    block.draw()
     
   end
 
@@ -24,7 +27,7 @@ class GameWindow < Gosu::Window
     draw_quad(
     0, 0, background_color, 
     400, 0, background_color, 
-    400, 800, background_color, 
+    800, 800, background_color, 
     0, 800, background_color)
   end
 end
