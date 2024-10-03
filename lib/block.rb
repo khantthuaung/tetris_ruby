@@ -32,4 +32,12 @@ class Block
     end
     return moved_tiles
   end
+
+  def rotate()
+    @rotation_state = (@rotation_state + 1) % 4
+  end
+
+  def undo_rotation()
+    @rotation_state = (@rotation_state - 1) % 4
+  end
 end

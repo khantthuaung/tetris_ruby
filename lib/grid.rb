@@ -34,4 +34,12 @@ class Grid
       return false
     end
   end
+
+  def is_empty?(row,col)
+    if @grid[row][col] == 0
+      return true
+    else
+      return false
+    end
+  end
 end

@@ -6,10 +6,15 @@ class GameWindow < Gosu::Window
     super 400,800, false # width, height, fullscreen
     self.caption = "Ruby Tetris" #caption
     @game = Game.new()
+    @frame_count = 0
+    @move_delay = 30
   end
 
   def update
-    
+    @frame_count += 1
+    if @frame_count % @move_delay == 0
+      @game.move_down()
+    end
   end
 
   def draw()
@@ -25,10 +30,12 @@ class GameWindow < Gosu::Window
       @game.move_right()
     when Gosu::KbDown
       @game.move_down()
+    when Gosu::KbSpace
+      @game.rotate()
     end
   end
 
-  
+
   def draw_background()
     background_color = Gosu::Color.new(255,44, 44, 127)
     draw_quad(
