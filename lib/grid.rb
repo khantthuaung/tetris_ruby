@@ -17,13 +17,6 @@ class Grid
     end
   end
 
-  def get_cell_colors #returns an array of colors for blocks
-
-    
-
-    return [dark_grey, green, red, orange, yellow, purple, cyan, blue]
-  end
-
   def draw() #draw each cell for corresponding color
     @grid.each_with_index do |row, i|
       row.each_with_index do |cell, j|
@@ -34,11 +27,11 @@ class Grid
     end
   end
   
-  # def draw_rect(x, y, width, height, color,z=0)
-  #   draw_quad(
-  #   x, y, color,
-  #   x + width, y, color,
-  #   x + width, y + height, color,
-  #   x, y + height, color,z)
-  # end
+  def is_inside?(row,col)
+    if row >= 0 && row < @rows/2 && col >= 0 && col < @columns/2
+      return true
+    else
+      return false
+    end
+  end
 end

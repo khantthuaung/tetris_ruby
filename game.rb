@@ -1,36 +1,55 @@
-require 'Gosu'
-require_relative 'lib/tetrinominos' #calling the block class from the lib folder
-require_relative 'lib/grid' #calling the grid class from the lib folder
+require_relative 'lib/grid'
+require_relative 'lib/tetrinominos'
 
-class GameWindow < Gosu::Window
+class Game
+  attr_accessor :grid, :block, :score, :game_over
   def initialize
-    super 400,800, false # width, height, fullscreen
-    self.caption = "Ruby Tetris" #caption
+    @grid = Grid.new()
+    @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
+    @current_block = get_random_block()
+    @next_block = get_random_block()
   end
 
-  def update
-    
+  def get_random_block
+    if @blocks.length == 0
+      @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
+    end
+    return @blocks.sample
   end
 
-  def draw()
-    draw_background()
-    grid = Grid.new()
-    grid.print_grid
-    grid.draw()
-    block = OBlock.new()
-    block.draw()
-    
+  def draw
+    @grid.draw()
+    @current_block.draw()
   end
 
-  def draw_background()
-    background_color = Gosu::Color.new(255,44, 44, 127)
-    draw_quad(
-    0, 0, background_color, 
-    400, 0, background_color, 
-    800, 800, background_color, 
-    0, 800, background_color)
+  def move_left
+    @current_block.move(0,-1)
+    unless block_inside() 
+      @current_block.move(0,1)
+    end
+  end
+  
+  def move_right
+    @current_block.move(0,1)
+    unless block_inside() 
+      @current_block.move(0,-1)
+    end
+  end
+
+  def move_down
+    @current_block.move(1,0)
+    unless block_inside()
+      @current_block.move(-1,0)
+    end
+  end
+
+  def block_inside()
+    tiles = @current_block.get_cell_position()
+    tiles.each do |tile|
+      if !@grid.is_inside?(tile.rows, tile.cols)
+        return false
+      end
+    end
+    return true
   end
 end
-
-window = GameWindow.new
-window.show
