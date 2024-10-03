@@ -20,6 +20,7 @@ class Game
   end
 
   def draw
+    @grid.print_grid()
     @grid.draw()
     @current_block.draw()
   end
@@ -60,6 +61,7 @@ class Game
     end
     @current_block = @next_block
     @next_block = get_random_block()
+    @grid.clear_full_rows()
   end
   
   def block_fixed()

@@ -4,8 +4,8 @@ class Grid
   attr_accessor :rows, :columns,:cell_size, :grid
 
   def initialize
-    @rows = 40
-    @columns = 20
+    @rows = 20
+    @columns = 10
     @cell_size = 40
     @grid = Array.new(@rows) { Array.new(@columns, 0) }
     @colors = Colors.get_cell_colors() #color array
@@ -28,11 +28,46 @@ class Grid
   end
   
   def is_inside?(row,col)
-    if row >= 0 && row < @rows/2 && col >= 0 && col < @columns/2
+    if row >= 0 && row < @rows && col >= 0 && col < @columns
       return true
     else
       return false
     end
+  end
+  
+  def is_row_full?(row)
+    for cols in 0..@columns-1
+      if @grid[row][cols] == 0
+        return false
+      end
+    end
+    return true
+  end
+
+  def clear_row(row)
+    for cols in 0..@columns-1
+      @grid[row][cols] = 0
+    end
+  end
+
+  def move_down_rows(row,num_rows)
+    for cols in 0..@columns-1
+      @grid[row+num_rows][cols] = @grid[row][cols]
+      @grid[row][cols] = 0
+    end
+  end
+
+  def clear_full_rows()
+    completed = 0 
+    for row in (@rows-1).downto(0)
+      if is_row_full?(row)
+        clear_row(row)
+        completed += 1
+      elsif completed > 0
+        move_down_rows(row,completed)
+      end
+    end
+    return completed
   end
 
   def is_empty?(row,col)
