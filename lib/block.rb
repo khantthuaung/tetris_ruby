@@ -1,21 +1,22 @@
 require_relative 'color'
 require 'Gosu'
 class Block
-  attr_accessor :block_id,:cells, :cell_size, :rotation_state
-  def initialize (block_id)
+  attr_accessor :block_id,:cells, :cell_size, :rotation_state,:hidden_id
+  def initialize (block_id,h_id)
     @block_id = block_id
+    @hidden_id = h_id
     @cells = {}
-    @cell_size = 40
+    @cell_size = 30
     @row_off = 0
     @col_off = 0
     @rotation_state = 0
     @color = Colors.get_cell_colors()
   end
 
-  def draw()
+  def draw(offset_x,offset_y)
     tiles = get_cell_position
     tiles.each do |tile|
-      Gosu.draw_rect(tile.cols * @cell_size+1, tile.rows * @cell_size+1, @cell_size-1, @cell_size-1, @color[@block_id])
+      Gosu.draw_rect(offset_x+ tile.cols * @cell_size,offset_y+ tile.rows * @cell_size, @cell_size-1, @cell_size-1, @color[@block_id])
     end
   end
 

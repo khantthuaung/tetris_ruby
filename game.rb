@@ -8,6 +8,8 @@ class Game
     @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
     @current_block = get_random_block()
     @next_block = get_random_block()
+    @game_over = false
+    @score = 0
   end
 
   def get_random_block
@@ -19,10 +21,27 @@ class Game
     return block
   end
 
+  def update_score(line_clear)
+    if line_clear ==1 
+      @score += 100
+    elsif line_clear == 2
+      @score += 300
+    elsif line_clear == 3
+      @score += 500
+    elsif line_clear == 4
+      @score += 1000
+    end
+  end
+
   def draw
-    @grid.print_grid()
+    # @grid.print_grid()
     @grid.draw()
-    @current_block.draw()
+    @current_block.draw(11,11)
+    if @next_block.hidden_id ==6 || @next_block.hidden_id == 7
+      @next_block.draw(255,240)
+    else
+      @next_block.draw(270,200)
+    end
   end
 
   def move_left
@@ -61,7 +80,12 @@ class Game
     end
     @current_block = @next_block
     @next_block = get_random_block()
-    @grid.clear_full_rows()
+    rows_clear = @grid.clear_full_rows()
+    update_score(rows_clear)
+
+    if block_fixed() == false
+      @game_over = true
+    end
   end
   
   def block_fixed()
@@ -83,6 +107,12 @@ class Game
     end
     return true
   end
-
   
+  def reset
+    @grid.reset()
+    @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
+    @current_block = get_random_block()
+    @next_block = get_random_block()
+    @score = 0
+  end
 end

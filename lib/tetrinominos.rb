@@ -3,8 +3,9 @@ require_relative 'color'
 require_relative 'position'
 class LBlock < Block
   def initialize
-    # id = [1,2,3,4,5,6,7]
-    super(@block_id = 1)
+    @hidden_id= 1
+    id = [1,2,3,4,5,6,7]
+    super(@block_id = id.sample,@hidden_id)
     @cells = {
       0=> [Position.new(0,2),Position.new(1,0),Position.new(1,1),Position.new(1,2)],
       1=> [Position.new(0,1),Position.new(1,1),Position.new(2,1),Position.new(2,2)],
@@ -17,8 +18,9 @@ end
 
 class TBlock < Block
   def initialize
-    # id = [1,2,3,4,5,6,7]
-    super(@block_id = 2)
+    @hidden_id= 2
+    id = [1,2,3,4,5,6,7]
+    super(@block_id = id.sample,@hidden_id)
     @cells = {
       0=> [Position.new(0,1),Position.new(1,0),Position.new(1,1),Position.new(1,2)],
       1=> [Position.new(0,1),Position.new(1,1),Position.new(1,2),Position.new(2,1)],
@@ -31,8 +33,9 @@ end
 
 class JBlock < Block
   def initialize
-    # id = [1,2,3,4,5,6,7]
-    super(@block_id = 3)
+    @hidden_id= 3
+    id = [1,2,3,4,5,6,7]
+    super(@block_id = id.sample,@hidden_id)
     @cells = {
       0=> [Position.new(0,1),Position.new(1,1),Position.new(2,0),Position.new(2,1)],
       1=> [Position.new(0,0),Position.new(1,0),Position.new(1,1),Position.new(1,2)],
@@ -45,8 +48,9 @@ end
 
 class SBlock < Block  
   def initialize
-    # id = [1,2,3,4,5,6,7]
-    super(@block_id = 4)
+    @hidden_id= 4
+    id = [1,2,3,4,5,6,7]
+    super(@block_id = id.sample,@hidden_id)
     @cells = {
       0=> [Position.new(0,1),Position.new(0,2),Position.new(1,0),Position.new(1,1)],
       1=> [Position.new(0,0),Position.new(1,0),Position.new(1,1),Position.new(2,1)],
@@ -59,8 +63,9 @@ end
 
 class ZBlock < Block
   def initialize
-    # id = [1,2,3,4,5,6,7]
-    super(@block_id = 5)
+    @hidden_id= 5
+    id = [1,2,3,4,5,6,7]
+    super(@block_id = id.sample,@hidden_id)
     @cells = {
       0=> [Position.new(0,0),Position.new(0,1),Position.new(1,1),Position.new(1,2)],
       1=> [Position.new(0,1),Position.new(1,0),Position.new(1,1),Position.new(2,0)],
@@ -73,8 +78,9 @@ end
 
 class IBlock < Block
   def initialize
-    # id = [1,2,3,4,5,6,7]
-    super(@block_id = 6)
+    @hidden_id= 6
+    id = [1,2,3,4,5,6,7]
+    super(@block_id = id.sample,@hidden_id)
     @cells = {
       0=> [Position.new(1,0),Position.new(1,1),Position.new(1,2),Position.new(1,3)],
       1=> [Position.new(0,2),Position.new(1,2),Position.new(2,2),Position.new(3,2)],
@@ -87,8 +93,9 @@ end
 
 class OBlock < Block
   def initialize
-    # id = [1,2,3,4,5,6,7]
-    super(@block_id = 7)
+    @hidden_id= 7
+    id = [1,2,3,4,5,6,7]
+    super(@block_id = id.sample, @hidden_i)
     @cells = {
       0=> [Position.new(0,0),Position.new(0,1),Position.new(1,0),Position.new(1,1)],
       1=> [Position.new(0,0),Position.new(0,1),Position.new(1,0),Position.new(1,1)],

@@ -6,7 +6,7 @@ class Grid
   def initialize
     @rows = 20
     @columns = 10
-    @cell_size = 40
+    @cell_size = 30
     @grid = Array.new(@rows) { Array.new(@columns, 0) }
     @colors = Colors.get_cell_colors() #color array
   end
@@ -22,7 +22,7 @@ class Grid
       row.each_with_index do |cell, j|
         cell_value = @grid[i][j]
         color = @colors[cell_value]
-        Gosu.draw_rect(j * @cell_size+1, i * @cell_size+1, @cell_size-1, @cell_size-1, color)
+        Gosu.draw_rect(j * @cell_size+11, i * @cell_size+11, @cell_size-1, @cell_size-1, color)
       end
     end
   end
@@ -76,5 +76,10 @@ class Grid
     else
       return false
     end
+  end
+
+  def reset #reset grid
+    @grid.each { |row| row.fill(0) }
+    @game_over = false 
   end
 end
