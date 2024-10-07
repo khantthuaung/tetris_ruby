@@ -15,7 +15,6 @@ class GameWindow < Gosu::Window
     @colors = Colors.new()
     @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
     @timer = Gosu.milliseconds
-    
   end
 
   def update
@@ -58,17 +57,22 @@ class GameWindow < Gosu::Window
   def block_draw()
     column = 50
     @blocks.each do |block|
+      if block.hidden_id==6
+        block.draw(5,column+30)
+        column += 80
+      else
       block.draw(5,column)
       column += 80
+      end
     end
     @font.draw_text("Blocks Appear Count", 30, 10, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.i_count}", 250, 50, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.j_count}", 250, 160, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.l_count}", 250, 230, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.o_count}", 250, 310, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.s_count}", 250, 380, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.t_count}", 250, 480, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.z_count}", 250, 560, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[5]}", 250, 80, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[2]}", 250, 160, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[0]}", 250, 230, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[6]}", 250, 310, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[3]}", 250, 380, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[1]}", 250, 480, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[4]}", 250, 560, 1, 1.0, 1.0, Colors::WHITE)
   end
 
   def score_group
@@ -106,6 +110,7 @@ class GameWindow < Gosu::Window
     when Gosu::KbSpace 
       @game.rotate() if !@game.game_over
     when Gosu::KbR 
+      @timer = Gosu.milliseconds
       if @game.game_over
         @game.game_over = false
         @game.reset
