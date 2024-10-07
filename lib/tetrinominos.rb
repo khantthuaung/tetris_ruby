@@ -37,12 +37,12 @@ class JBlock < Block
     id = [1,2,3,4,5,6,7]
     super(@block_id = id.sample,@hidden_id)
     @cells = {
-      0=> [Position.new(0,1),Position.new(1,1),Position.new(2,0),Position.new(2,1)],
-      1=> [Position.new(0,0),Position.new(1,0),Position.new(1,1),Position.new(1,2)],
+      0=> [Position.new(0,0),Position.new(1,0),Position.new(1,1),Position.new(1,2)],
+      1=> [Position.new(0,1),Position.new(1,1),Position.new(2,0),Position.new(2,1)],
       2=> [Position.new(0,1),Position.new(0,2),Position.new(1,1),Position.new(2,1)],
       3=> [Position.new(1,0),Position.new(1,1),Position.new(1,2),Position.new(2,2)]
     }
-  move(0,4)
+  move(0,3)
   end
 end
 
@@ -95,7 +95,7 @@ class OBlock < Block
   def initialize
     @hidden_id= 7
     id = [1,2,3,4,5,6,7]
-    super(@block_id = id.sample, @hidden_i)
+    super(@block_id = id.sample, @hidden_id)
     @cells = {
       0=> [Position.new(0,0),Position.new(0,1),Position.new(1,0),Position.new(1,1)],
       1=> [Position.new(0,0),Position.new(0,1),Position.new(1,0),Position.new(1,1)],
