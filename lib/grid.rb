@@ -9,7 +9,7 @@ class Grid
     @cell_size = 30
     @grid = Array.new(@rows) { Array.new(@columns, 0) }
     @colors = Colors.get_cell_colors() #color array
-    @linefinished_sound = Gosu::Sample.new("sounds/linefinished.mp3")
+    @linefinished_sound = Gosu::Sample.new("lib/sounds/linefinished.mp3")
   end
 
   def print_grid #grid printing

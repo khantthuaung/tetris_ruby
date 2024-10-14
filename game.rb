@@ -2,25 +2,27 @@ require_relative 'lib/grid'
 require_relative 'lib/tetrinominos'
 
 class Game
-  attr_accessor :grid, :block, :score, :game_over, :counter
+  attr_accessor :grid, :block, :score, :game_over, :counter , :time
   def initialize
-    @counter = Array.new(7,0)
+    @frame_count = 0
+    @move_delay = 30
+    @timer = Gosu.milliseconds
+    @counter = Array.new(8,0)
+    @time = Array.new(2,0)
     @grid = Grid.new()
-    @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
+    @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new(),Ublock.new()]
     @current_block = get_random_block()
     @next_block = get_random_block()
     @game_over = false
     @score = 0
-    @gameover_sound = Gosu::Sample.new("sounds/gameover.mp3")
-    @blockplaced_sound = Gosu::Sample.new("sounds/placed.mp3")
-    @rotate_sound = Gosu::Sample.new("sounds/rotate.mp3")
-    @gameover_sound = Gosu::Sample.new("sounds/gameover2.mp3")
-    
+    @gameover_sound = Gosu::Sample.new("lib/sounds/gameover.mp3")
+    @blockplaced_sound = Gosu::Sample.new("lib/sounds/placed.mp3")
+    @rotate_sound = Gosu::Sample.new("lib/sounds/rotate.mp3") 
   end
 
   def get_random_block
     if @blocks.empty?
-      @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
+      @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new(),Ublock.new()]
     end
     block = @blocks.sample
     count_blocks(block.hidden_id)
@@ -28,17 +30,19 @@ class Game
     return block
   end
 
+  #block counter for each block
   def count_blocks(id)
     index = 0
-    while index < 7
+    total = 8 
+    while index < total
       if index == id-1
         @counter[index] += 1
       end
       index += 1
     end
-    puts @counter.to_s
   end
 
+  #scoore update
   def update_score(line_clear)
     if line_clear ==1 
       @score += 100
@@ -49,8 +53,22 @@ class Game
     elsif line_clear == 4
       @score += 1000
     end
+    current_max_score = 0
+    if File.exist?("lib/max_score.txt")
+      File.open("lib/max_score.txt",'r') do |file|
+        current_max_score = file.read.to_i
+      end
+    end
+
+    #update score if the current score is greater than the max score
+    if @score > current_max_score
+      File.open("lib/max_score.txt", "w") do |file|
+        file.write @score
+      end
+    end
   end
 
+  #draw grid and blocks on the screen
   def draw
     # @grid.print_grid()
     @grid.draw()
@@ -94,6 +112,7 @@ class Game
     end
   end
 
+  #place the block on the grid
   def lock_block()
     @blockplaced_sound.play()
     tiles = @current_block.get_cell_position()
@@ -111,6 +130,7 @@ class Game
     end
   end
   
+  #check whether the block is fixed
   def block_fixed()
     tiles = @current_block.get_cell_position()
     tiles.each do |tile|
@@ -120,7 +140,8 @@ class Game
     end
     return true
   end
-
+   
+  #check whether the block is inside the grid
   def block_inside()
     tiles = @current_block.get_cell_position()
     tiles.each do |tile|
@@ -133,10 +154,32 @@ class Game
   
   def reset
     @grid.reset()
-    @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new()]
+    @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new(),Ublock.new()]
     @current_block = get_random_block()
     @next_block = get_random_block()
     @score = 0
-    @counter = Array.new(7,0)
+    @counter = Array.new(8,0)
+    @timer = Gosu.milliseconds
+  end
+
+  def game_speed
+    @frame_count += 1
+    elapsed_time = Gosu.milliseconds - @timer
+    if !@game_over
+      @time[1]= (elapsed_time / 1000) % 60 
+      @time[0]= (elapsed_time / 1000)/60
+    end
+    if @time[0] == 0 && @time[1] > 30 && !game_over
+      @move_delay = 20
+    end
+    if @time[0] > 0 && @time[1] > 0 && !game_over
+      @move_delay = 15
+    end
+    if @time[0] > 1 && @time[1] > 0 && !game_over
+      @move_delay = 10
+    end
+    if (@frame_count % @move_delay == 0) && !game_over
+        move_down()
+    end
   end
 end
