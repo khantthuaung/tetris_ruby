@@ -4,11 +4,9 @@ require_relative 'lib/tetrinominos'
 class Game
   attr_accessor :grid, :block, :score, :game_over, :counter , :time
   def initialize
-    @frame_count = 0
-    @move_delay = 30
-    @timer = Gosu.milliseconds
+    
     @counter = Array.new(8,0)
-    @time = Array.new(2,0)
+    
     @grid = Grid.new()
     @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new(),Ublock.new()]
     @current_block = get_random_block()
@@ -162,24 +160,4 @@ class Game
     @timer = Gosu.milliseconds
   end
 
-  def game_speed
-    @frame_count += 1
-    elapsed_time = Gosu.milliseconds - @timer
-    if !@game_over
-      @time[1]= (elapsed_time / 1000) % 60 
-      @time[0]= (elapsed_time / 1000)/60
-    end
-    if @time[0] == 0 && @time[1] > 30 && !game_over
-      @move_delay = 20
-    end
-    if @time[0] > 0 && @time[1] > 0 && !game_over
-      @move_delay = 15
-    end
-    if @time[0] > 1 && @time[1] > 0 && !game_over
-      @move_delay = 10
-    end
-    if (@frame_count % @move_delay == 0) && !game_over
-        move_down()
-    end
-  end
 end

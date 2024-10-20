@@ -8,9 +8,9 @@ class Menu
     @window = window
     @change_stage = change_stage
     @start = Button.new("Start",280, 300, 200, 50)
-    @options = Button.new("Options",280, 380, 200, 50)
-    @quit = Button.new("Quit",280, 460, 200, 50)
-    @title = Gosu::Font.new(50, name:"lib/fonts/ThaleahFat.ttf")
+    @options = Button.new("Options",280, 370, 200, 50)
+    @quit = Button.new("Quit",280, 440, 200, 50)
+    @title = Gosu::Font.new(80, name:"lib/fonts/ThaleahFat.ttf")
     @background_image = Gosu::Image.new("lib/background.png", tileable: true)
   end
 
@@ -22,12 +22,12 @@ class Menu
 
   def draw
     @background_image.draw(0, 0, 0)
-    @title.draw("TETRIS", 300, 100, 1, 1, 1, Gosu::Color::BLACK) 
+    @title.draw("TETRIS", 270, 100, 1, 1, 1, Gosu::Color::WHITE) 
     @start.draw()
     @options.draw()
     @quit.draw()
   end
-  
+
   def click
     @start.click do
       @change_stage.call(:game)
