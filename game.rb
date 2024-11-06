@@ -2,20 +2,24 @@ require_relative 'lib/grid'
 require_relative 'lib/tetrinominos'
 
 class Game
-  attr_accessor :grid, :block, :score, :game_over, :counter , :time
+  attr_accessor :grid, :block, :score, :game_over, :counter , :time, :sfx_sound
   def initialize
-    
     @counter = Array.new(8,0)
-    
     @grid = Grid.new()
     @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new(),Ublock.new()]
     @current_block = get_random_block()
     @next_block = get_random_block()
     @game_over = false
     @score = 0
-    @gameover_sound = Gosu::Sample.new("lib/sounds/gameover.mp3")
-    @blockplaced_sound = Gosu::Sample.new("lib/sounds/placed.mp3")
-    @rotate_sound = Gosu::Sample.new("lib/sounds/rotate.mp3") 
+    @gameover_sound = Gosu::Song.new("lib/sounds/gameover.mp3")
+    @blockplaced_sound = Gosu::Song.new("lib/sounds/placed.mp3")
+    @rotate_sound = Gosu::Song.new("lib/sounds/rotate.mp3")
+    @sfx_sound = [@gameover_sound,@blockplaced_sound,@rotate_sound]
+    index = 0
+    while index < @sfx_sound.length
+      @sfx_sound[index].volume = 0.5
+      index += 1
+    end
   end
 
   def get_random_block
@@ -71,9 +75,10 @@ class Game
     # @grid.print_grid()
     @grid.draw()
     @current_block.draw(301,11)
-    if @next_block.hidden_id ==6
+    case @next_block.hidden_id
+    when 6
       @next_block.draw(555,240)
-    elsif  @next_block.hidden_id ==7
+    when 7
       @next_block.draw(555,220)
     else
       @next_block.draw(570,200)

@@ -9,8 +9,9 @@ class App < Gosu::Window
   def initialize()
     @game_state = :menu
     @menu = Menu.new(self,method(:change_stage))
-    @game = GameWindow.new
+    @game = GameWindow.new()
     @background_sound = Gosu::Song.new("lib/sounds/intro.mp3")
+    @background_sound.volume = 0.5
     @options = Options.new(self,@background_sound,method(:change_stage))
     super 800, 680
   end
@@ -49,13 +50,13 @@ class App < Gosu::Window
       when :options
         @options.click
       end
-
     end
+
     case @game_state
     when :game
       @game.button_down(id)
     end
-    
+
   end
 
   def change_stage(new_state)

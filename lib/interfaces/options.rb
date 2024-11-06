@@ -5,40 +5,42 @@ require_relative 'slider'
 class Options
   def initialize(window,sound,change_stage)
     @window = window
-    @title = Gosu::Font.new(40, name:"lib/fonts/ThaleahFat.ttf")
-    @font = Gosu::Font.new(20, name:"lib/fonts/ThaleahFat.ttf")
-    @slider = Slider.new(@window,200,300,300,20)
+    @title = Gosu::Font.new(80, name:"lib/fonts/ThaleahFat.ttf")
+    @font = Gosu::Font.new(30, name:"lib/fonts/ThaleahFat.ttf")
+    @music_slider = Slider.new(@window,250,380,300,20)
+    @sfx_slider = Slider.new(@window,250,300,300,20)
     @background_sound = sound
     @change_stage = change_stage
-    @background_image = Gosu::Image.new("lib/background.png", tileable: true)
-    @sound_on = Gosu::Image.new("lib/images/sound-50.png")
-    @sound_off = Gosu::Image.new("lib/images/no-sound-50.png")
-
-    @music_on = Gosu::Image.new("lib/images/music-64.png")
-    @music_off = Gosu::Image.new("lib/images/no-music-64.png")
-
-    @main_menu = Button.new("Back to Menu",280, 370, 200, 50)
+    @background_image = Gosu::Image.new("lib/background.png")
+    @music_control = false
+    @main_menu = Button.new("Back to Menu",300, 450, 200, 50)
   end
 
   def update(mouse_x, mouse_y)
-    @slider.update(@background_sound)
+    @music_slider.update(@background_sound)
+    @sfx_slider.update(@background_sound)
     @main_menu.update(mouse_x, mouse_y)
   end
 
   def draw()
     @background_image.draw(0, 0, 0)
-    @title.draw("Options", 250, 40, 1, 1.0, 1.0, Gosu::Color::BLACK)
-    @sound_on.draw(200, 200, 1)
-    @music_on.draw(250, 200, 1)
-    @slider.draw()
+    text_width = @title.text_width("Options")
+    @title.draw("Options", (800-text_width)/2, 100, 1, 1.0, 1.0, Gosu::Color::YELLOW)
+    @font.draw_text("Sound Effects", 320, 260, 1, 1.0, 1.0, Gosu::Color::GREEN)
+    @sfx_slider.draw()
+
+    @font.draw_text("Background Music", 290, 330, 1, 1.0, 1.0, Gosu::Color::GREEN)
+    @music_slider.draw()
+
     @main_menu.draw()
     
   end
 
   def click()
     @main_menu.click do
+      Gosu::Sample.new("lib/sounds/button.mp3").play
       @change_stage.call(:menu)
     end
   end
-
+  
 end

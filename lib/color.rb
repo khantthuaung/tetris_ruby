@@ -10,6 +10,9 @@ class Colors
     BLUE = Gosu::Color.new(255, 13,64,216)
     LIGHT_BLUE =  Gosu::Color.new(255, 128, 191, 255)
     WHITE = Gosu::Color.new(255, 255, 255, 255)
+    SLIDER_BAR = Gosu::Color.new(0xff_B9E5E8)
+    SLIDER_HANDLE = Gosu::Color.new(0xff_7AB2D3)
+    TITLE = Gosu::Color.new(0xff_EC8305)
 
     def self.get_cell_colors()
         return [DARK_GREY,GREEN, RED, ORANGE, YELLOW, PURPLE, CYAN, BLUE]

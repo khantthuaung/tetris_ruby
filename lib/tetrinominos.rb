@@ -1,6 +1,7 @@
 require_relative 'block'
 require_relative 'color'
 require_relative 'position'
+
 class LBlock < Block
   def initialize
     @hidden_id= 1

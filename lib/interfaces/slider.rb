@@ -1,5 +1,5 @@
 require 'Gosu'
-
+require_relative '../color'
 class Slider
   attr_reader :x, :y, :width, :height, :min_volume, :max_volume
   def initialize(window,x,y,width,height)
@@ -47,8 +47,8 @@ class Slider
 
   def draw()
     #draw the slider bar
-    Gosu.draw_rect(@x, @y - @height / 4, @width, @height / 2, Gosu::Color::GRAY)
+    Gosu.draw_rect(@x, @y - @height / 4, @width, @height / 2, Colors::SLIDER_BAR)
     #draw the handle
-    Gosu.draw_rect(@handle_position - 10, @y - 10, 20, 20, Gosu::Color::CYAN)
+    Gosu.draw_rect(@handle_position - 10, @y - 10, 20, 20, Colors::SLIDER_HANDLE)
   end
 end

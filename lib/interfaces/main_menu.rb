@@ -7,9 +7,9 @@ class Menu
   def initialize(window, change_stage)
     @window = window
     @change_stage = change_stage
-    @start = Button.new("Start",280, 300, 200, 50)
-    @options = Button.new("Options",280, 370, 200, 50)
-    @quit = Button.new("Quit",280, 440, 200, 50)
+    @start = Button.new("Start",300, 300, 200, 50)
+    @options = Button.new("Options",300, 370, 200, 50)
+    @quit = Button.new("Quit",300, 440, 200, 50)
     @title = Gosu::Font.new(80, name:"lib/fonts/ThaleahFat.ttf")
     @background_image = Gosu::Image.new("lib/background.png", tileable: true)
   end
@@ -22,7 +22,7 @@ class Menu
 
   def draw
     @background_image.draw(0, 0, 0)
-    @title.draw("TETRIS", 270, 100, 1, 1, 1, Gosu::Color::WHITE) 
+    @title.draw("TETRIS", 250 , 100, 2, 1.5, 1, Colors::TITLE) 
     @start.draw()
     @options.draw()
     @quit.draw()
@@ -30,12 +30,15 @@ class Menu
 
   def click
     @start.click do
+      Gosu::Sample.new("lib/sounds/button.mp3").play
       @change_stage.call(:game)
     end
     @options.click do
+      Gosu::Sample.new("lib/sounds/button.mp3").play
       @change_stage.call(:options)
     end
     @quit.click do
+      Gosu::Sample.new("lib/sounds/button.mp3").play
       @window.close
     end
   end
