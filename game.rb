@@ -14,12 +14,6 @@ class Game
     @gameover_sound = Gosu::Song.new("lib/sounds/gameover.mp3")
     @blockplaced_sound = Gosu::Song.new("lib/sounds/placed.mp3")
     @rotate_sound = Gosu::Song.new("lib/sounds/rotate.mp3")
-    @sfx_sound = [@gameover_sound,@blockplaced_sound,@rotate_sound]
-    index = 0
-    while index < @sfx_sound.length
-      @sfx_sound[index].volume = 0.5
-      index += 1
-    end
   end
 
   def get_random_block

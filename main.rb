@@ -6,31 +6,47 @@ require_relative 'lib/interfaces/main_menu'
 require_relative 'lib/interfaces/button'
 
 class GameWindow < Gosu::Window
-  def initialize
+  def initialize(move_delay, change_stage)
     @frame_count = 0
-    @move_delay = 30
-    @timer = Gosu.milliseconds
     @time = Array.new(2,0)
-    @reset_button = Button.new(300, 300, 200, 50, "Reset")
+    @move_delay = move_delay
+    @reset_button = Button.new("Restart",300, 440, 200, 50)
+    @main_menu_btn = Button.new("Main Menu",300, 500, 200, 50)
+    @exit_btn = Button.new("Exit Game",300, 560, 200, 50)
     @width = 800
     @height = 680
+    @change_stage = change_stage
     super @width,@height, false # width, height, fullscreen
     self.caption = "Ruby Tetris" #caption
     @game = Game.new()
     @font = Gosu::Font.new(30, name:"lib/fonts/ThaleahFat.ttf")
     @colors = Colors.new()
+    @pause = false
     @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new(),Ublock.new()]
   end
    
-  def update
-      game_speed()
-        #to keep pressing the button down
-      if !@game.game_over
-        if button_down?(Gosu::KbDown)
-          @game.move_down
-          @game.update_score(0) 
+  def update(timer,mouse_x, mouse_y)
+    @reset_button.update(mouse_x,mouse_y)
+    @main_menu_btn.update(mouse_x, mouse_y)
+    @exit_btn.update(mouse_x, mouse_y)
+    
+    if !@game.game_over and !@pause
+      unless @pause
+        elapsed_time = Gosu.milliseconds - timer - (@paused_duration || 0)
+        if !@game.game_over
+          @time[1]= (elapsed_time / 1000) % 60 
+          @time[0]= (elapsed_time / 1000)/60
         end
       end
+        game_speed(@move_delay)
+        #to keep pressing the button down
+        if !@game.game_over
+          if button_down?(Gosu::KbDown)
+            @game.move_down
+            @game.update_score(0) 
+          end
+        end
+    end
   end
 
   def show_timer()
@@ -39,37 +55,38 @@ class GameWindow < Gosu::Window
   end
 
   def draw()
+    if @game.game_over
+      game_over_screen()
+    end
       draw_background()
       score_group()
       next_block_group()
-      if @game.game_over
-        game_over_screen()
-      end
       block_draw()
       show_timer
       @game.draw()
+    
   end
 
   def block_draw()
       column = 50
     @blocks.each do |block|
       if block.hidden_id==6
-        block.draw(5,column+30)
+        block.draw(0,column+30)
         column += 80
       else
-      block.draw(5,column)
+      block.draw(0,column)
       column += 80
       end
     end
     @font.draw_text("Blocks Appear Count", 20, 10, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[5]}", 250, 80, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[2]}", 250, 160, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[0]}", 250, 230, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[6]}", 250, 310, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[3]}", 250, 380, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[1]}", 250, 480, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[4]}", 250, 560, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@game.counter[7]}", 250, 630, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[5]}", 220, 80, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[2]}", 220, 160, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[0]}", 220, 230, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[6]}", 220, 310, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[3]}", 220, 380, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[1]}", 220, 480, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[4]}", 220, 560, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("#{@game.counter[7]}", 220, 630, 1, 1.0, 1.0, Colors::WHITE)
   end
 
   def score_group
@@ -92,13 +109,17 @@ class GameWindow < Gosu::Window
     end
     highest = "Highest Score"
     game_over = "Game Over"
-    restart = "Press R to restart"
-    @font.draw_text(highest,(@width-get_text_width(highest))/2 , 50, 1, 2.0, 2.0, Gosu::Color::RED)
-    @font.draw_text(@max_score,(@width-get_text_width(@max_score))/2 ,100, 1, 1.5, 1.5, Gosu::Color::RED)
+  
+
+    @font.draw_text(game_over,( (@width-get_text_width(game_over))/2)-60, 50, 1, 2.0, 2.0, Colors::GAME_OVER)
+
+    @font.draw_text(highest,(@width-get_text_width(highest))/2 , 280, 1, 1.0, 1.0, Colors::GAME_OVER)
+    @font.draw_text(@max_score,(@width-get_text_width(@max_score))/2 ,300, 1, 1.0, 1.0, Colors::GAME_OVER)
 
 
-    @font.draw_text(game_over, (@width-get_text_width(game_over))/2, 280, 1, 2.0, 2.0, Gosu::Color::RED)
-    @font.draw_text(restart, (@width-get_text_width(restart))/2, 320, 1, 1.5,1.5, Gosu::Color::RED)
+    @reset_button.draw()
+    @main_menu_btn.draw()
+    @exit_btn.draw()
     draw_quad(
       0,0, Gosu::Color.new(100, 0, 0, 0.2),
       @width,0, Gosu::Color.new(100, 0, 0, 0.2),
@@ -115,10 +136,21 @@ class GameWindow < Gosu::Window
       @game.move_right()  if !@game.game_over
     when Gosu::KbSpace
       @game.rotate() if !@game.game_over
-    when Gosu::KbR
+    when Gosu::KbP
+      switch_pause_state
+    when Gosu::MsLeft
       if @game.game_over
-        @game.game_over = false
-        @game.reset
+        @reset_button.click do
+          @game.game_over = false
+          @game.reset
+        end
+        @main_menu_btn.click do
+          @game.game_over = false
+          @game.reset
+        end
+        @exit_btn.click do
+          close
+        end
       end
     end
 
@@ -133,28 +165,42 @@ class GameWindow < Gosu::Window
     0, @height, background_color)
   end
 
-  def game_speed
+  def game_speed(speed)
     @frame_count += 1
-    elapsed_time = Gosu.milliseconds - @timer
-    if !@game.game_over
-      @time[1]= (elapsed_time / 1000) % 60 
-      @time[0]= (elapsed_time / 1000)/60
-    end
-    if @time[0] == 0 && @time[1] > 30 && !@game.game_over
-      @move_delay = 20
-    end
-    if @time[0] > 0 && @time[1] > 0 && !@game.game_over
-      @move_delay = 15
-    end
-    if @time[0] > 1 && @time[1] > 0 && !@game.game_over
-      @move_delay = 10
-    end
-    if (@frame_count % @move_delay == 0) && !@game.game_over
+    if (@frame_count % speed == 0) && !@game.game_over
         @game.move_down()
     end
   end
 
+
+  def update_game_speed(new_speed)
+    @move_delay = new_speed
+  end
+
   def get_text_width(text)
     return @font.text_width(text)
+  end
+
+  def switch_pause_state
+    if @pause == false
+      @pause = true
+      @pause_start = Gosu.milliseconds
+    else
+      @pause = false
+      @paused_duration = (Gosu.milliseconds - @pause_start)
+    end
+  end
+
+  def click()
+    @reset_button.click do
+      @game.game_over = false
+      @game.reset
+    end
+    @main_menu_btn.click do
+      @change_stage.call(:menu)
+    end
+    @exit_btn.click do
+      close
+    end
   end
 end

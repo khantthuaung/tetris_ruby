@@ -11,13 +11,8 @@ class Button
 
   # Draw the button with a simple rectangle and text
   def draw
-    color = @hover ? Colors::CYAN : Gosu::Color::WHITE
-    Gosu.draw_quad(
-      @x, @y, color,
-      @x + @width, @y, color,
-      @x + @width, @y + @height, color,
-      @x, @y + @height, color
-    )
+    color = @hover ? Colors::CYAN : Colors::BUTTON_COLOR
+    Gosu.draw_rect(@x, @y, @width, @height, color, 1)
     @text.draw_text(@text_string, @x+ (@width - @text.text_width(@text_string))/2,@y+10, 1, 1.0, 1.0, Gosu::Color::BLACK)
   end
 

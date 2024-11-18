@@ -8,7 +8,6 @@ class Options
     @title = Gosu::Font.new(80, name:"lib/fonts/ThaleahFat.ttf")
     @font = Gosu::Font.new(30, name:"lib/fonts/ThaleahFat.ttf")
     @music_slider = Slider.new(@window,250,380,300,20)
-    @sfx_slider = Slider.new(@window,250,300,300,20)
     @background_sound = sound
     @change_stage = change_stage
     @background_image = Gosu::Image.new("lib/background.png")
@@ -18,7 +17,6 @@ class Options
 
   def update(mouse_x, mouse_y)
     @music_slider.update(@background_sound)
-    @sfx_slider.update(@background_sound)
     @main_menu.update(mouse_x, mouse_y)
   end
 
@@ -26,9 +24,7 @@ class Options
     @background_image.draw(0, 0, 0)
     text_width = @title.text_width("Options")
     @title.draw("Options", (800-text_width)/2, 100, 1, 1.0, 1.0, Gosu::Color::YELLOW)
-    @font.draw_text("Sound Effects", 320, 260, 1, 1.0, 1.0, Gosu::Color::GREEN)
-    @sfx_slider.draw()
-
+  
     @font.draw_text("Background Music", 290, 330, 1, 1.0, 1.0, Gosu::Color::GREEN)
     @music_slider.draw()
 
