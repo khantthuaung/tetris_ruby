@@ -68,7 +68,7 @@ class Game
   def draw
     # @grid.print_grid()
     @grid.draw()
-    @current_block.draw(301,11)
+    @current_block.draw(271,41)
     case @next_block.hidden_id
     when 6
       @next_block.draw(555,240)

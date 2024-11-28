@@ -1,4 +1,5 @@
 require './main'
+require './game'
 require './lib/interfaces/options'
 require './lib/interfaces/main_menu'
 require './lib/color'
@@ -7,14 +8,14 @@ require './lib/color'
 class App < Gosu::Window
   attr_accessor :game_state,:timer,:game_speed
   def initialize()
-    @game_state = :game
+    @game_state = :menu
     @game_speed = 30
     @menu = Menu.new(self,method(:change_stage))
     @game = GameWindow.new(@game_speed, method(:change_stage))
+    @game_functions = Game.new()
     @background_sound = Gosu::Song.new("lib/sounds/intro.mp3")
     @background_sound.volume = 0.5
     @options = Options.new(self,@background_sound,method(:change_stage))
-    @start_timer = nil
     super 800, 680
    
   end
@@ -22,8 +23,7 @@ class App < Gosu::Window
   def update()
     case @game_state
     when :game
-      @start_timer ||= Gosu.milliseconds
-      @game.update(@start_timer,mouse_x,mouse_y)
+      @game.update(mouse_x,mouse_y)
       @background_sound.stop()
     when :menu
       @background_sound.play()
@@ -33,7 +33,6 @@ class App < Gosu::Window
       @background_sound.play()
     end
   end
-
   def draw()
     case @game_state
       when :menu

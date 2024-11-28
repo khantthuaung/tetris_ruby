@@ -9,15 +9,15 @@ class Menu
     @change_stage = change_stage
     @start = Button.new("Start",300, 250, 200, 50)
     
-    @level_easy = Button.new("Easy",300,320 , 200, 50)
-    @level_normal = Button.new("Normal",300,390 , 200, 50)
-    @level_hard = Button.new("Hard",300,460, 200, 50)
+    @level_easy = Button.new("Easy",300,250 , 200, 50)
+    @level_normal = Button.new("Normal",300,320 , 200, 50)
+    @level_hard = Button.new("Hard",300,390, 200, 50)
 
-    @options = Button.new("Options",300, 530, 200, 50)
-    @quit = Button.new("Quit",300, 600, 200, 50)
+    @options = Button.new("Options",300, 460, 200, 50)
+    @quit = Button.new("Quit",300, 530, 200, 50)
 
     @title = Gosu::Font.new(80, name:"lib/fonts/ThaleahFat.ttf")
-    @background_image = Gosu::Image.new("lib/background.png", tileable: true)
+    @background_image = Gosu::Image.new("lib/images/background.png", tileable: true)
     lock_file = File.expand_path("../../images/lock.png", __FILE__)
     @lock = Gosu::Image.new(lock_file, tileable: true)
     score_file_path = File.expand_path("../../max_score.txt", __FILE__)
@@ -65,7 +65,7 @@ class Menu
     end
     @quit.click do
       Gosu::Sample.new("lib/sounds/button.mp3").play
-      @window.close
+      exit
     end
     @level_easy.click do
       Gosu::Sample.new("lib/sounds/button.mp3").play

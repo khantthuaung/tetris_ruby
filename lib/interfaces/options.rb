@@ -10,7 +10,7 @@ class Options
     @music_slider = Slider.new(@window,250,380,300,20)
     @background_sound = sound
     @change_stage = change_stage
-    @background_image = Gosu::Image.new("lib/background.png")
+    @background_image = Gosu::Image.new("lib/images/background.png")
     @music_control = false
     @main_menu = Button.new("Back to Menu",300, 450, 200, 50)
   end

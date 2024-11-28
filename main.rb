@@ -13,6 +13,7 @@ class GameWindow < Gosu::Window
     @reset_button = Button.new("Restart",300, 440, 200, 50)
     @main_menu_btn = Button.new("Main Menu",300, 500, 200, 50)
     @exit_btn = Button.new("Exit Game",300, 560, 200, 50)
+    @resume = Button.new("Resume",300, 440, 200, 50)
     @width = 800
     @height = 680
     @change_stage = change_stage
@@ -25,45 +26,44 @@ class GameWindow < Gosu::Window
     @blocks = [IBlock.new(), JBlock.new(), LBlock.new(), OBlock.new(), SBlock.new(), TBlock.new(), ZBlock.new(),Ublock.new()]
   end
    
-  def update(timer,mouse_x, mouse_y)
+  def update(mouse_x, mouse_y)
     @reset_button.update(mouse_x,mouse_y)
     @main_menu_btn.update(mouse_x, mouse_y)
     @exit_btn.update(mouse_x, mouse_y)
     
-    if !@game.game_over and !@pause
-      unless @pause
-        elapsed_time = Gosu.milliseconds - timer - (@paused_duration || 0)
-        if !@game.game_over
-          @time[1]= (elapsed_time / 1000) % 60 
-          @time[0]= (elapsed_time / 1000)/60
+    if !@game.game_over && !@pause
+      game_speed(@move_delay)
+      #to keep pressing the button down
+      if !@game.game_over
+        if button_down?(Gosu::KbDown)
+          @game.move_down
+          @game.update_score(0) 
         end
       end
-        game_speed(@move_delay)
-        #to keep pressing the button down
-        if !@game.game_over
-          if button_down?(Gosu::KbDown)
-            @game.move_down
-            @game.update_score(0) 
-          end
-        end
     end
   end
 
-  def show_timer()
-    @font.draw_text("Time Elapsed", 620, 450, 1, 1.0, 1.0, Colors::WHITE)
-    @font.draw_text("#{@time[0]} : #{@time[1]}",670, 500, 1,1.0, 1.0, Colors::LIGHT_BLUE)
+  def show_pause_info()
+    @font.draw_text("Press", 620, 450, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("P", 720, 450, 1, 1.0, 1.0, Colors::RED)
+    @font.draw_text("to pause", 620, 480, 1, 1.0, 1.0, Colors::WHITE)
   end
 
   def draw()
     if @game.game_over
       game_over_screen()
-    end
+    else
       draw_background()
       score_group()
       next_block_group()
       block_draw()
-      show_timer
+      show_pause_info()
       @game.draw()
+    if @pause
+      @font.draw_text("Game is Paused", 230, 300, 1, 2.0, 2.0, Colors::WHITE)
+    end
+    end
+      
     
   end
 
@@ -78,7 +78,7 @@ class GameWindow < Gosu::Window
       column += 80
       end
     end
-    @font.draw_text("Blocks Appear Count", 20, 10, 1, 1.0, 1.0, Colors::WHITE)
+    @font.draw_text("Blocks Counter", 40, 20, 1, 1.0, 1.0, Colors::WHITE)
     @font.draw_text("#{@game.counter[5]}", 220, 80, 1, 1.0, 1.0, Colors::WHITE)
     @font.draw_text("#{@game.counter[2]}", 220, 160, 1, 1.0, 1.0, Colors::WHITE)
     @font.draw_text("#{@game.counter[0]}", 220, 230, 1, 1.0, 1.0, Colors::WHITE)
@@ -109,10 +109,7 @@ class GameWindow < Gosu::Window
     end
     highest = "Highest Score"
     game_over = "Game Over"
-  
-
     @font.draw_text(game_over,( (@width-get_text_width(game_over))/2)-60, 50, 1, 2.0, 2.0, Colors::GAME_OVER)
-
     @font.draw_text(highest,(@width-get_text_width(highest))/2 , 280, 1, 1.0, 1.0, Colors::GAME_OVER)
     @font.draw_text(@max_score,(@width-get_text_width(@max_score))/2 ,300, 1, 1.0, 1.0, Colors::GAME_OVER)
 
@@ -138,20 +135,6 @@ class GameWindow < Gosu::Window
       @game.rotate() if !@game.game_over
     when Gosu::KbP
       switch_pause_state
-    when Gosu::MsLeft
-      if @game.game_over
-        @reset_button.click do
-          @game.game_over = false
-          @game.reset
-        end
-        @main_menu_btn.click do
-          @game.game_over = false
-          @game.reset
-        end
-        @exit_btn.click do
-          close
-        end
-      end
     end
 
   end
@@ -182,11 +165,12 @@ class GameWindow < Gosu::Window
   end
 
   def switch_pause_state
-    if @pause == false
+    if !@pause
       @pause = true
       @pause_start = Gosu.milliseconds
     else
       @pause = false
+      @paused_duration ||= 0
       @paused_duration = (Gosu.milliseconds - @pause_start)
     end
   end
@@ -197,10 +181,12 @@ class GameWindow < Gosu::Window
       @game.reset
     end
     @main_menu_btn.click do
+      @game.game_over = false
+      @game.reset
       @change_stage.call(:menu)
     end
     @exit_btn.click do
-      close
+      exit
     end
   end
 end

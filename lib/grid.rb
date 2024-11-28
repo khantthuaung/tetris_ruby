@@ -23,7 +23,7 @@ class Grid
       row.each_with_index do |cell, j|
         cell_value = @grid[i][j]
         color = @colors[cell_value]
-        Gosu.draw_rect(j * @cell_size+301, i * @cell_size+11, @cell_size-1, @cell_size-1, color)
+        Gosu.draw_rect(j * @cell_size+271, i * @cell_size+41, @cell_size-1, @cell_size-1, color)
       end
     end
   end
